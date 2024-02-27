@@ -2,16 +2,33 @@ import telebot
 import webbrowser
 from telebot import types
 
-bot = telebot.TeleBot(Token)
+bot = telebot.TeleBot('7075188848:AAHSKp1o9EEDmuE9GZjeHX65wg_110n30iQ')
 
 @bot.message_handler(commands=['site', 'website'])
 def site(message):
     webbrowser.open('https://youtu.be/hp4GgkjkvyU')
 
+@bot.message_handler(commands=['start'])
+def start(message):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn1 = types.KeyboardButton('Перейти на сайт 😄')
+    markup.row(btn1)
+    btn2 = types.KeyboardButton('Удалить фото')
+    btn3 = types.KeyboardButton('Изменить текст')
+    markup.row(btn2, btn3)
+    file = open('./avatark.jpeg', 'rb')
+    bot.send_photo(message.chat.id, file, reply_markup=markup)
+    # bot.send_audio(message.chat.id, file, reply_markup=markup) Формат mp3
+    # bot.send_video(message.chat.id, file, reply_markup=markup) Формат mp4
+    # bot.send_message(message.chat.id, f'Привет, {message.from_user.first_name} {message.from_user.last_name}', reply_markup=markup)
+    bot.register_next_step_handler(message, on_click)
 
-@bot.message_handler(commands=['start', 'main', 'hello'])
-def main(message):
-    bot.send_message(message.chat.id, f'Привет, {message.from_user.first_name} {message.from_user.last_name}')
+
+def on_click(message):
+    if message.text == 'Перейти на сайт':
+        bot.send_message(message.chat.id, 'website is open')
+    elif message.text == 'Удалить фото':
+        bot.send_message(message.chat.id, 'deleted')
 
 
 @bot.message_handler(commands=['help'])
